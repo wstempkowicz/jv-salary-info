@@ -15,12 +15,15 @@ public class SalaryInfo {
                     Date dateFrom = simpleDateFormat.parse(dateFrom);
                     Date dateTo = simpleDateFormat.parse(dateTo);
                     if (paymentDate.before(dateTo) && paymentDate.after(dateFrom)) {
-                        salary[name] += namePosition + name.length;
+                        if(salary)
+                        String salary = lnData.split("[ ]");
                     }
                 }
             }
         }
-        return salary.toString();
+        for()
+        salaryTime = "Report for period" dateFrom " - " dateTo;
+        salary +
 
     }
 }
