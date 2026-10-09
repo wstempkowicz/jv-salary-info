@@ -5,37 +5,34 @@ import java.util.Date;
 
 public class SalaryInfo {
     public String getSalaryInfo(String[] names, String[] data, String dateFrom, String dateTo) {
-        String[] salary;
         int i = 0;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        StringBuilder result = new StringBuilder();
+        result.append("Report for period " + dateFrom + " - " + dateTo);
         for (String name : names) {
+            int salaryByHour = 0;
             for (String lnData : data) {
                 int namePosition = lnData.indexOf(name);
                 if (namePosition != -1) {
-                    Date paymentDate = lnData.substring(0, namePosition);
-                    Date dateBegin = simpleDateFormat.parse(dateFrom);
-                    Date dateEnd = simpleDateFormat.parse(dateTo);
-                    if (paymentDate.before(dateTo) 
-                        && paymentDate.after(dateFrom) 
-                        && paymentDate.compareTo(dateTo)
-                        && paymentDate.compareTo(dateFrom)) {
-                        if(salary[name]){
-                            i--;
-                            String[] salaryAdd = lnData.split("[ ]");
-                            salary[name][i][2] += salaryAdd[2] * salaryAdd[3];
-                        } else {
-                            salary[name][i] = lnData.split("[ ]");
-                            salary[name][i][2] = salary[i][2] * salary[i][3];
-                            i++;
+                    String tmpDate = lnData.substring(0, namePosition);
+                    try {
+                        Date paymentDate = simpleDateFormat.parse(tmpDate);
+                        Date dateBegin = simpleDateFormat.parse(dateFrom);
+                        Date dateEnd = simpleDateFormat.parse(dateTo);
+                    } catch (ParseException ex) {
+                        ex.printStackTrace();
+                    }
+                    if (!paymentDate.before(dateBegin) && !paymentDate.after(dateEnd)) {
+                        String[] salary = lnData.split("[ ]");
+                        if (salary[1] == name) {
+                            salaryByHour += Integer.parseInt(salary[2]) * Integer.parseInt(salary[3]);
                         }
                     }
                 }
             }
+            result.append(name + " - " + salaryByHour);
+            i++;
         }
-        StringBuilder result = "Report for period" dateFrom " - " dateTo;
-        for(int i = 0; i < salary.length; i++){
-            result.append(\n salary[i].[1]+" - "+ salary[i].[2] );
-}
-
+        return result.toString();
     }
 }
