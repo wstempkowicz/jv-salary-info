@@ -6,7 +6,6 @@ import java.util.Date;
 
 public class SalaryInfo {
     public String getSalaryInfo(String[] names, String[] data, String dateFrom, String dateTo) {
-        int i = 0;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
         StringBuilder result = new StringBuilder();
         result.append("Report for period " + dateFrom + " - " + dateTo);
@@ -23,15 +22,15 @@ public class SalaryInfo {
             for (String lnData : data) {
                 int namePosition = lnData.indexOf(name);
                 if (namePosition != -1) {
-                    String tmpDate = lnData.trim().substring(0, namePosition);
+                    String[] tmpDate = lnData.trim().split("[]");
                     Date paymentDate;
                     try {
-                        paymentDate = simpleDateFormat.parse(tmpDate);
+                        paymentDate = simpleDateFormat.parse(tmpDate[0]);
                     } catch (ParseException ex) {
                         ex.printStackTrace();
                     }
                     if (!paymentDate.before(dateBegin) && !paymentDate.after(dateEnd)) {
-                        String[] salary = lnData.split("[ ]");
+                        String[] salary = tmpDate;
                         if (salary[1].equals(name)) {
                             salaryByHour += Integer.parseInt(salary[2]) * Integer.parseInt(salary[3]);
                         }
@@ -39,7 +38,6 @@ public class SalaryInfo {
                 }
             }
             result.append("\n" + name + " - " + salaryByHour);
-            i++;
         }
         return result.toString();
     }
