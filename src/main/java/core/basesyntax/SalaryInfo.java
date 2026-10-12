@@ -9,15 +9,14 @@ public class SalaryInfo {
 
     public String getSalaryInfo(String[] names, String[] data, String dateFrom, String dateTo) {
         StringBuilder result = new StringBuilder();
-        result.append("Report for period " + dateFrom + " - " + dateTo + "\n");
-        System.lineSeparator();
-        LocalDate dateBegin = LocalDate.parse(dateFrom, DATE_FORMATTER);
-        LocalDate dateEnd = LocalDate.parse(dateTo, DATE_FORMATTER);
+        result.append("Report for period " + dateFrom.trim() + " - " + dateTo.trim() + "\n");
+        LocalDate dateBegin = LocalDate.parse(dateFrom.trim(), DATE_FORMATTER);
+        LocalDate dateEnd = LocalDate.parse(dateTo.trim(), DATE_FORMATTER);
 
         for (String name : names) {
             int salaryByHour = 0;
             for (String lnData : data) {
-                String[] dataArray = lnData.split(" ");
+                String[] dataArray = lnData.split("\\s+");
                 if (dataArray[1].equals(name)) {
                     LocalDate paymentDate = LocalDate.parse(dataArray[0], DATE_FORMATTER);
                     if (!paymentDate.isBefore(dateBegin) && !paymentDate.isAfter(dateEnd)) {
@@ -27,7 +26,6 @@ public class SalaryInfo {
                 }
             }
             result.append(name + " - " + salaryByHour + "\n");
-            System.lineSeparator();
         }
         return result.toString();
     }
