@@ -1,48 +1,32 @@
 package core.basesyntax;
 
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 public class SalaryInfo {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter
             .ofPattern("dd.MM.yyyy");
 
     public String getSalaryInfo(String[] names, String[] data, String dateFrom, String dateTo) {
-        DateTimeFormatter dateTimeFormatter = DATE_FORMATTER;
         StringBuilder result = new StringBuilder();
-        result.append("Report for period " + dateFrom + " - " + dateTo);
-        Date dateBegin;
-        Date dateEnd;
-        try {
-            dateBegin = DateTimeFormatter.parse(dateFrom);
-            dateEnd = DateTimeFormatter.parse(dateTo);
-        } catch (ParseException ex) {
-            ex.printStackTrace();
-        }
+        result.append("Report for period " + dateFrom + " - " + dateTo + "\n");
+        System.lineSeparator();
+        LocalDate dateBegin = LocalDate.parse(dateFrom, DATE_FORMATTER);
+        LocalDate dateEnd = LocalDate.parse(dateTo, DATE_FORMATTER);
+
         for (String name : names) {
             int salaryByHour = 0;
             for (String lnData : data) {
-                int namePosition = lnData.indexOf(name);
-                if (namePosition != -1) {
-                    String[] dataFields = lnData.split(" ");
-                    Date paymentDate;
-                    try {
-                        paymentDate = DateTimeFormatter.parse(dataFields[0]);
-                    } catch (ParseException ex) {
-                        ex.printStackTrace();
-                    }
-                    if (!paymentDate.before(dateBegin) && !paymentDate.after(dateEnd)) {
-                        String[] salary = dataFields;
-                        if (salary[1].equals(name)) {
-                            salaryByHour += Integer.parseInt(salary[2])
-                                    * Integer.parseInt(salary[3]);
-                        }
+                String[] dataArray = lnData.split(" ");
+                if (dataArray[1].equals(name)) {
+                    LocalDate paymentDate = LocalDate.parse(dataArray[0], DATE_FORMATTER);
+                    if (!paymentDate.isBefore(dateBegin) && !paymentDate.isAfter(dateEnd)) {
+                        salaryByHour += Integer.parseInt(dataArray[2])
+                                * Integer.parseInt(dataArray[3]);
                     }
                 }
             }
-            result.append(name + " - " + salaryByHour);
+            result.append(name + " - " + salaryByHour + "\n");
             System.lineSeparator();
         }
         return result.toString();
