@@ -13,11 +13,11 @@ public class SalaryInfo {
         LocalDate dateBegin = LocalDate.parse(dateFrom.trim(), DATE_FORMATTER);
         LocalDate dateEnd = LocalDate.parse(dateTo.trim(), DATE_FORMATTER);
 
-        for (String name : names) {
+        for (int i = 0; i < names.length; i++) {
             int salaryByHour = 0;
             for (String lnData : data) {
                 String[] dataArray = lnData.split("\\s+");
-                if (dataArray[1].equals(name)) {
+                if (dataArray[1].equals(names[i])) {
                     LocalDate paymentDate = LocalDate.parse(dataArray[0], DATE_FORMATTER);
                     if (!paymentDate.isBefore(dateBegin) && !paymentDate.isAfter(dateEnd)) {
                         salaryByHour += Integer.parseInt(dataArray[2])
@@ -25,7 +25,7 @@ public class SalaryInfo {
                     }
                 }
             }
-            result.append(name + " - " + salaryByHour + "\n");
+            result.append(names[i] + " - " + salaryByHour + "\n");
         }
         return result.toString();
     }
